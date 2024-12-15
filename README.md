@@ -25,7 +25,7 @@
         transform: translateY(100vh) rotate(0deg);
         opacity: 0;
       }
-      10% { opacity: 1; }
+      10%  { opacity: 1; }
       100% {
         transform: translateY(-120vh) rotate(360deg);
         opacity: 0;
@@ -77,14 +77,14 @@
     }
     @keyframes bounce {
       0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-10px); }
+      50%      { transform: translateY(-10px); }
     }
     @keyframes pulse {
       0%, 100% { text-shadow: 2px 2px 4px #ff9900; }
-      50% { text-shadow: 2px 2px 12px #ff9900; }
+      50%      { text-shadow: 2px 2px 12px #ff9900; }
     }
     @keyframes peel {
-      0% { transform: rotate(0); }
+      0%   { transform: rotate(0); }
       100% { transform: rotate(-20deg); }
     }
 
@@ -111,7 +111,7 @@
     }
     @keyframes fadeInUp {
       from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
+      to   { opacity: 1; transform: translateY(0); }
     }
 
     .container h2 {
@@ -210,7 +210,7 @@
       text-decoration: underline;
     }
 
-    /* ---------- THANK YOU OVERLAY ---------- */
+    /* ---------- OVERLAYS ---------- */
     #thankYouOverlay {
       display: none;
       position: fixed;
@@ -222,6 +222,7 @@
       align-items:center;
       color: #fff;
       text-align:center;
+      flex-direction: column;
     }
     #thankYouOverlay .content {
       background: #ffcc00;
@@ -231,9 +232,46 @@
       max-width: 400px;
       box-shadow:0 4px 12px rgba(0,0,0,0.3);
       position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
     }
 
-    /* ---------- BANANA FACT POPUP (Optional) ---------- */
+    /* For the multi-step celebration animation */
+    #congratsSplat {
+      font-size: 2.2em;
+      color: red;
+      margin-bottom: 20px;
+      animation: splatFade 2s forwards;
+    }
+    @keyframes splatFade {
+      0%   { opacity: 1; transform: scale(1); }
+      50%  { opacity: 1; transform: scale(1.2); }
+      100% { opacity: 0; transform: scale(1.5); }
+    }
+    #smileyFace {
+      font-size: 3em;
+      color: green;
+      opacity: 0;
+      animation: smileyFadeIn 2s forwards;
+      animation-delay: 2s; /* start after splat animation finishes */
+    }
+    @keyframes smileyFadeIn {
+      0%   { opacity: 0; transform: scale(0.5); }
+      100% { opacity: 1; transform: scale(1); }
+    }
+    #sendAnotherBtn {
+      margin-top: 20px;
+      opacity: 0;
+      animation: buttonAppear 1s forwards;
+      animation-delay: 3s; /* appear after the smiley fades in */
+    }
+    @keyframes buttonAppear {
+      0%   { opacity: 0; transform: scale(0.5); }
+      100% { opacity: 1; transform: scale(1); }
+    }
+
+    /* ---------- BANANA FACT POPUP ---------- */
     #bananaFactPopup {
       display: none;
       position: fixed;
@@ -251,6 +289,23 @@
     #bananaFactPopup h3 {
       margin-top: 0;
     }
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ---------- ORDER LIST STYLES ---------- */
+    #orderList {
+      margin: 15px 0;
+      list-style-type: none;
+      padding-left: 0;
+    }
+    #orderList li {
+      background: rgba(255, 238, 186, 0.7);
+      margin: 5px 0;
+      padding: 8px 12px;
+      border-radius: 10px;
+    }
   </style>
 </head>
 <body>
@@ -267,23 +322,27 @@
   <div class="banana-icon"></div>
 
   <h1 title="Click me for fun!">BaNaNa GrAm</h1>
-  <p class="price-info">Send a Banana Gram right to their door!</p>
+  <p class="price-info">Send a Banana Gram right to their door (USA only)!</p>
 
   <!-- Banana Gram Details -->
   <div class="container">
     <h2>Craft Your Banana Gram</h2>
     <form id="bananaForm">
-      <label for="fruit">Choose your fruit:</label>
-      <select id="fruit" name="fruit" required>
+      <label for="fruitSelect">Choose your fruit:</label>
+      <select id="fruitSelect" name="fruitSelect" required>
         <option value="Banana">Banana</option>
-        <option value="Green Apple">Green Apple</option>
-        <option value="Cucumber">Cucumber</option>
-        <option value="Squash">Squash</option>
+        <option value="Apple">Apple</option>
+        <option value="Potato">Potato</option>
         <option value="Eggplant">Eggplant</option>
+        <option value="Squash">Squash</option>
       </select>
 
-      <label for="quantity">Quantity:</label>
-      <input type="number" id="quantity" name="quantity" min="1" value="1" required />
+      <label for="fruitQuantity">Quantity:</label>
+      <input type="number" id="fruitQuantity" name="fruitQuantity" min="1" value="1" required />
+
+      <button type="button" class="button" onclick="addFruit()">Add Fruit</button>
+
+      <ul id="orderList"></ul>
 
       <label for="message">Write your message (max 140 chars):</label>
       <textarea id="message" name="message" maxlength="140" placeholder="Write your message here..." required></textarea>
@@ -298,7 +357,6 @@
 
       <p class="total-price" id="totalPrice">Total Price: $0.00</p>
 
-      <button type="button" class="button" onclick="updateTotalPrice()">Update Price</button>
       <button type="button" class="button" id="showFactBtn" onclick="showBananaFact()">Show Banana Fact</button>
     </form>
   </div>
@@ -356,56 +414,99 @@
   <!-- Thank You Overlay -->
   <div id="thankYouOverlay">
     <div class="content">
-      <h2>Thank You!</h2>
-      <p>Your Banana Gram is being drafted!</p>
-      <button class="button" onclick="closeThankYou()">Close</button>
+      <div id="congratsSplat">CONGRATULATIONS SPLAT!!</div>
+      <div id="smileyFace">😃</div>
+      <button id="sendAnotherBtn" class="button" onclick="closeThankYou()">SEND ANOTHER BANANAGRAM!</button>
     </div>
   </div>
 
   <script>
-    /* ------- PRICE CALCULATION ------- */
-    const quantityField = document.getElementById("quantity");
-    const fruitField = document.getElementById("fruit");
-    const deliveryField = document.getElementById("delivery");
-    const funnyNameField = document.getElementById("funnyName");
-    const totalPriceEl = document.getElementById("totalPrice");
+    /* ------- GLOBAL ORDER ARRAY ------- */
+    let orderItems = [];
 
-    // Show/hide funnyName field
+    /* ------- PRICE CALCULATION ------- */
+    const fruitSelect     = document.getElementById("fruitSelect");
+    const fruitQuantity   = document.getElementById("fruitQuantity");
+    const orderList       = document.getElementById("orderList");
+    const totalPriceEl    = document.getElementById("totalPrice");
+
+    const deliveryField   = document.getElementById("delivery");
+    const funnyNameField  = document.getElementById("funnyName");
+
     deliveryField.addEventListener("change", function () {
       funnyNameField.style.display = (this.value === "Funny Name") ? "block" : "none";
     });
 
-    function updateTotalPrice() {
-      const quantity = parseInt(quantityField.value) || 1;
-      let total = 0;
-      // Pricing logic:
-      // 1 fruit => $13
-      // 2 fruits => $20
-      // 3+ fruits => $20 + $10 for each fruit beyond 2
-      if (quantity === 1) {
-        total = 13;
-      } else if (quantity === 2) {
-        total = 20;
-      } else if (quantity > 2) {
-        total = 20 + (quantity - 2) * 10; // e.g., 3 fruits => $30, 4 => $40, etc.
+    function addFruit() {
+      const fruit = fruitSelect.value;
+      const qty   = parseInt(fruitQuantity.value) || 1;
+      if (qty < 1) {
+        alert("Quantity must be at least 1.");
+        return;
       }
 
+      // Add item to the order array
+      orderItems.push({ fruit, qty });
+
+      // Update the display
+      renderOrderList();
+      calculatePrice();
+    }
+
+    function renderOrderList() {
+      orderList.innerHTML = "";
+      for (let i = 0; i < orderItems.length; i++) {
+        const item = orderItems[i];
+        const li = document.createElement("li");
+        li.textContent = `${item.fruit} x ${item.qty}`;
+        orderList.appendChild(li);
+      }
+    }
+
+    function calculatePrice() {
+      // Count total fruits
+      let totalFruits = 0;
+      orderItems.forEach(item => totalFruits += item.qty);
+
+      let total = 0;
+      if (totalFruits === 1) {
+        total = 13;
+      } else if (totalFruits === 2) {
+        total = 20;
+      } else if (totalFruits > 2) {
+        total = 20 + (totalFruits - 2) * 10; 
+      }
       totalPriceEl.textContent = "Total Price: $" + total.toFixed(2);
     }
 
-    // Initialize
-    updateTotalPrice();
-    quantityField.addEventListener("input", updateTotalPrice);
-    fruitField.addEventListener("change", updateTotalPrice);
-
     /* ------- BANANA FACT POPUP ------- */
+    // Over 20 facts for extra fun :)
     const facts = [
       "Bananas are one of the most popular fruits in the world!",
       "Bananas are technically berries!",
       "Over 100 billion bananas are consumed worldwide each year!",
       "Bananas float in water because they are less dense than water!",
-      "The scientific name for bananas is 'Musa sapientum', meaning 'fruit of the wise men'!"
+      "The scientific name for bananas is 'Musa sapientum' (fruit of the wise men)!",
+      "Humans share about 60% of our DNA with bananas!",
+      "Bananas grow in clusters called hands, each with about 10-20 bananas.",
+      "India produces the most bananas globally.",
+      "A banana plant is actually a giant herb, not a tree!",
+      "Bananas were originally found in Southeast Asia and Papua New Guinea.",
+      "There are nearly 1,000 varieties of bananas, but most we eat are the Cavendish.",
+      "Bananas can help reduce stress and anxiety due to their high potassium and vitamin B6 content.",
+      "The inside of a banana peel can help whiten teeth!",
+      "Rubbing a mosquito bite with the inside of a banana peel can help relieve itching.",
+      "Bananas are the first cultivated fruit and have been grown for thousands of years.",
+      "Frozen bananas can be blended into a natural ice cream-like dessert!",
+      "Bananas can stand in for eggs in many vegan baking recipes.",
+      "Alexander the Great saw bananas in India in 327 B.C.",
+      "The Banana Split dessert was invented in 1904 in Latrobe, Pennsylvania.",
+      "Uganda is sometimes called 'the Banana Republic' due to high banana consumption.",
+      "Some cultures use banana leaves as eco-friendly plates.",
+      "Bananas give off a lot of ethylene gas, which can speed the ripening of other fruits nearby.",
+      "People have used banana fibers to make paper and fabrics!"
     ];
+
     function showBananaFact() {
       const fact = facts[Math.floor(Math.random() * facts.length)];
       document.getElementById("bananaFactText").textContent = fact;
@@ -420,11 +521,10 @@
       // Validate required fields
       const requiredIDs = [
         'senderName','senderPhone','senderEmail','venmoHandle',
-        'recipientName','recipientAddress','recipientZip',
-        'quantity','message'
+        'recipientName','recipientAddress','recipientZip','message'
       ];
       for (let id of requiredIDs) {
-        const val = document.getElementById(id).value.trim();
+        const val = document.getElementById(id)?.value.trim();
         if (!val) {
           alert("Please fill out all required fields.");
           return;
@@ -432,29 +532,37 @@
       }
 
       // Gather form data
-      const senderName       = document.getElementById('senderName').value.trim();
-      const senderPhone      = document.getElementById('senderPhone').value.trim();
-      const senderEmail      = document.getElementById('senderEmail').value.trim();
-      const venmoHandle      = document.getElementById('venmoHandle').value.trim();
+      const senderName     = document.getElementById('senderName').value.trim();
+      const senderPhone    = document.getElementById('senderPhone').value.trim();
+      const senderEmail    = document.getElementById('senderEmail').value.trim();
+      const venmoHandle    = document.getElementById('venmoHandle').value.trim();
 
       const recipientName    = document.getElementById('recipientName').value.trim();
       const recipientAddress = document.getElementById('recipientAddress').value.trim();
       const recipientZip     = document.getElementById('recipientZip').value.trim();
 
-      const fruit       = document.getElementById('fruit').value;
-      const quantity    = document.getElementById('quantity').value;
-      const userMessage = document.getElementById('message').value;
-      const delivery    = document.getElementById('delivery').value;
-      const funnyName   = document.getElementById('funnyName').value;
-      const totalPrice  = document.getElementById('totalPrice').textContent;
+      const userMessage   = document.getElementById('message').value.trim();
+      const delivery      = document.getElementById('delivery').value;
+      const funnyName     = document.getElementById('funnyName').value;
+      const totalPrice    = document.getElementById('totalPrice').textContent;
 
-      // Build the email body
+      // Summarize fruit order
+      if (orderItems.length === 0) {
+        alert("Please add at least one fruit to your order.");
+        return;
+      }
+      let fruitSummary = "";
+      let totalFruits = 0;
+      orderItems.forEach(item => {
+        fruitSummary += `${item.fruit} x ${item.qty}\n`;
+        totalFruits += item.qty;
+      });
+
       let emailBody = `Hello Austin,\n\n`;
       emailBody += `I would like to place a Banana Gram order!\n\n`;
       emailBody += `BANANA GRAM ORDER DETAILS:\n`;
       emailBody += `-----------------------------------\n`;
-      emailBody += `Fruit: ${fruit}\n`;
-      emailBody += `Quantity: ${quantity}\n`;
+      emailBody += fruitSummary;
       emailBody += `Message: ${userMessage}\n`;
       emailBody += `Delivery Method: ${delivery}\n`;
       if (delivery === 'Funny Name') {
@@ -481,13 +589,21 @@
       const body    = encodeURIComponent(emailBody);
       const mailtoLink = `mailto:aytmout@gmail.com?subject=${subject}&body=${body}`;
 
-      // Show the thank you overlay and open the mail client
+      // Show the thank you overlay and animate the celebrations
       document.getElementById("thankYouOverlay").style.display = "flex";
-      window.location.href = mailtoLink;
+
+      // Open the mail client after a moment’s delay
+      setTimeout(() => {
+        window.location.href = mailtoLink;
+      }, 500);
     }
 
     function closeThankYou() {
+      // Reset the overlay to hidden
       document.getElementById("thankYouOverlay").style.display = "none";
+      // Potentially allow them to place another order by resetting the form?
+      // Just for convenience, let's reload the page:
+      window.location.reload();
     }
   </script>
 </body>
