@@ -39,7 +39,6 @@
       animation: floatBanana 10s linear infinite;
       z-index: 1;
     }
-    /* Adjust how many bananas, speeds, positions, etc. */
     .banana-icon:nth-child(1)  { left: 5%;  animation-duration: 12s; }
     .banana-icon:nth-child(2)  { left: 15%; animation-duration: 14s; }
     .banana-icon:nth-child(3)  { left: 25%; animation-duration: 11s; }
@@ -210,7 +209,35 @@
       text-decoration: underline;
     }
 
-    /* ---------- OVERLAYS ---------- */
+    /* ---------- BUBBLE OVERLAY (LARGE NOTICE) ---------- */
+    #bubbleOverlay {
+      display: none;
+      position: fixed;
+      top:0; left:0;
+      width:100%; height:100%;
+      background: rgba(0,0,0,0.5);
+      z-index:20000;
+      justify-content:center;
+      align-items:center;
+      color: #fff;
+      text-align:center;
+    }
+    #bubbleOverlay .content {
+      background: #ffcc00;
+      color:#333;
+      padding: 40px;
+      border-radius: 60px;
+      max-width: 500px;
+      box-shadow:0 4px 12px rgba(0,0,0,0.3);
+      position: relative;
+      font-size: 1.2em;
+      line-height: 1.5;
+    }
+    #bubbleOverlay .content button {
+      margin-top: 20px;
+    }
+
+    /* ---------- THANK YOU OVERLAY ---------- */
     #thankYouOverlay {
       display: none;
       position: fixed;
@@ -222,7 +249,6 @@
       align-items:center;
       color: #fff;
       text-align:center;
-      flex-direction: column;
     }
     #thankYouOverlay .content {
       background: #ffcc00;
@@ -236,42 +262,13 @@
       flex-direction: column;
       align-items: center;
     }
-
-    /* For the multi-step celebration animation */
-    #congratsSplat {
+    #thankYouOverlay h2 {
+      margin: 0 0 20px;
       font-size: 2.2em;
-      color: red;
-      margin-bottom: 20px;
-      animation: splatFade 2s forwards;
-    }
-    @keyframes splatFade {
-      0%   { opacity: 1; transform: scale(1); }
-      50%  { opacity: 1; transform: scale(1.2); }
-      100% { opacity: 0; transform: scale(1.5); }
-    }
-    #smileyFace {
-      font-size: 3em;
       color: green;
-      opacity: 0;
-      animation: smileyFadeIn 2s forwards;
-      animation-delay: 2s; /* start after splat animation finishes */
-    }
-    @keyframes smileyFadeIn {
-      0%   { opacity: 0; transform: scale(0.5); }
-      100% { opacity: 1; transform: scale(1); }
-    }
-    #sendAnotherBtn {
-      margin-top: 20px;
-      opacity: 0;
-      animation: buttonAppear 1s forwards;
-      animation-delay: 3s; /* appear after the smiley fades in */
-    }
-    @keyframes buttonAppear {
-      0%   { opacity: 0; transform: scale(0.5); }
-      100% { opacity: 1; transform: scale(1); }
     }
 
-    /* ---------- BANANA FACT POPUP ---------- */
+    /* ---------- BANANA FACT POPUP (Optional) ---------- */
     #bananaFactPopup {
       display: none;
       position: fixed;
@@ -320,6 +317,22 @@
   <div class="banana-icon"></div>
   <div class="banana-icon"></div>
   <div class="banana-icon"></div>
+
+  <!-- Bubbly Overlay explaining the service -->
+  <div id="bubbleOverlay">
+    <div class="content">
+      <h2 style="margin-bottom: 15px;">YES, WE MAIL A REAL BANANA!</h2>
+      <p>
+        You're about to literally send a REAL banana (or other fruit) to someone's house 
+        with your custom message written on it! 
+        <br><br>
+        You can choose to send it <strong>ANONYMOUSLY</strong> or include your name. 
+        <br><br>
+        Are you ready?
+      </p>
+      <button class="button" onclick="closeBubbleOverlay()">I AM READY!</button>
+    </div>
+  </div>
 
   <h1 title="Click me for fun!">BaNaNa GrAm</h1>
   <p class="price-info">Send a Banana Gram right to their door (USA only)!</p>
@@ -414,9 +427,9 @@
   <!-- Thank You Overlay -->
   <div id="thankYouOverlay">
     <div class="content">
-      <div id="congratsSplat">CONGRATULATIONS SPLAT!!</div>
-      <div id="smileyFace">😃</div>
-      <button id="sendAnotherBtn" class="button" onclick="closeThankYou()">SEND ANOTHER BANANAGRAM!</button>
+      <h2>CONGRATULATIONS!</h2>
+      <p>Your Banana Gram request was emailed successfully.</p>
+      <button class="button" onclick="closeThankYou()">SEND ANOTHER BANANAGRAM!</button>
     </div>
   </div>
 
@@ -424,12 +437,20 @@
     /* ------- GLOBAL ORDER ARRAY ------- */
     let orderItems = [];
 
+    /* ------- PAGE LOAD: Show Bubble Overlay ------- */
+    window.onload = function() {
+      document.getElementById("bubbleOverlay").style.display = "flex";
+    }
+
+    function closeBubbleOverlay() {
+      document.getElementById("bubbleOverlay").style.display = "none";
+    }
+
     /* ------- PRICE CALCULATION ------- */
     const fruitSelect     = document.getElementById("fruitSelect");
     const fruitQuantity   = document.getElementById("fruitQuantity");
     const orderList       = document.getElementById("orderList");
     const totalPriceEl    = document.getElementById("totalPrice");
-
     const deliveryField   = document.getElementById("delivery");
     const funnyNameField  = document.getElementById("funnyName");
 
@@ -493,7 +514,7 @@
       "A banana plant is actually a giant herb, not a tree!",
       "Bananas were originally found in Southeast Asia and Papua New Guinea.",
       "There are nearly 1,000 varieties of bananas, but most we eat are the Cavendish.",
-      "Bananas can help reduce stress and anxiety due to their high potassium and vitamin B6 content.",
+      "Bananas can help reduce stress due to high potassium and vitamin B6!",
       "The inside of a banana peel can help whiten teeth!",
       "Rubbing a mosquito bite with the inside of a banana peel can help relieve itching.",
       "Bananas are the first cultivated fruit and have been grown for thousands of years.",
@@ -503,8 +524,8 @@
       "The Banana Split dessert was invented in 1904 in Latrobe, Pennsylvania.",
       "Uganda is sometimes called 'the Banana Republic' due to high banana consumption.",
       "Some cultures use banana leaves as eco-friendly plates.",
-      "Bananas give off a lot of ethylene gas, which can speed the ripening of other fruits nearby.",
-      "People have used banana fibers to make paper and fabrics!"
+      "Bananas give off a lot of ethylene gas, which can ripen other fruits nearby.",
+      "Banana fibers can be used to make paper and fabrics!"
     ];
 
     function showBananaFact() {
@@ -531,6 +552,12 @@
         }
       }
 
+      // Make sure the user has added some fruit
+      if (orderItems.length === 0) {
+        alert("Please add at least one fruit to your order.");
+        return;
+      }
+
       // Gather form data
       const senderName     = document.getElementById('senderName').value.trim();
       const senderPhone    = document.getElementById('senderPhone').value.trim();
@@ -547,15 +574,9 @@
       const totalPrice    = document.getElementById('totalPrice').textContent;
 
       // Summarize fruit order
-      if (orderItems.length === 0) {
-        alert("Please add at least one fruit to your order.");
-        return;
-      }
       let fruitSummary = "";
-      let totalFruits = 0;
       orderItems.forEach(item => {
         fruitSummary += `${item.fruit} x ${item.qty}\n`;
-        totalFruits += item.qty;
       });
 
       let emailBody = `Hello Austin,\n\n`;
@@ -589,20 +610,19 @@
       const body    = encodeURIComponent(emailBody);
       const mailtoLink = `mailto:aytmout@gmail.com?subject=${subject}&body=${body}`;
 
-      // Show the thank you overlay and animate the celebrations
+      // Show the thank you overlay
       document.getElementById("thankYouOverlay").style.display = "flex";
 
-      // Open the mail client after a moment’s delay
+      // Open the mail client after a short delay
       setTimeout(() => {
         window.location.href = mailtoLink;
       }, 500);
     }
 
     function closeThankYou() {
-      // Reset the overlay to hidden
+      // Hide the overlay
       document.getElementById("thankYouOverlay").style.display = "none";
-      // Potentially allow them to place another order by resetting the form?
-      // Just for convenience, let's reload the page:
+      // Reload the page to let them create a new order
       window.location.reload();
     }
   </script>
