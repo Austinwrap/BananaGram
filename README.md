@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -12,11 +13,12 @@
     }
     body {
       font-family: 'Comic Sans MS', cursive, sans-serif;
-      background: #fff8d7; /* Banana-ish background color */
+      background: #fff8d7; /* Banana-ish background */
       overflow-x: hidden;
       color: #333;
       cursor: url('https://i.ibb.co/J3s8M16/banana-cursor.png'), auto;
       position: relative;
+      -webkit-tap-highlight-color: transparent;
     }
 
     /* ---------- FLOATING BANANA ANIMATION ---------- */
@@ -25,7 +27,7 @@
         transform: translateY(100vh) rotate(0deg);
         opacity: 0;
       }
-      10%  { opacity: 1; }
+      10% { opacity: 1; }
       100% {
         transform: translateY(-120vh) rotate(360deg);
         opacity: 0;
@@ -53,8 +55,8 @@
     /* ---------- HEADER ---------- */
     h1 {
       font-size: 3.5em;
-      color: #ffcc00;
-      text-shadow: 2px 2px 4px #ff9900;
+      color: #39ff14;  /* Neon green */
+      text-shadow: 0 0 10px #39ff14, 0 0 20px #39ff14;
       letter-spacing: 0.02em;
       display: inline-block;
       position: relative;
@@ -76,11 +78,11 @@
     }
     @keyframes bounce {
       0%, 100% { transform: translateY(0); }
-      50%      { transform: translateY(-10px); }
+      50% { transform: translateY(-10px); }
     }
     @keyframes pulse {
-      0%, 100% { text-shadow: 2px 2px 4px #ff9900; }
-      50%      { text-shadow: 2px 2px 12px #ff9900; }
+      0%, 100% { text-shadow: 0 0 10px #39ff14, 0 0 20px #39ff14; }
+      50% { text-shadow: 0 0 20px #39ff14, 0 0 40px #39ff14; }
     }
     @keyframes peel {
       0%   { transform: rotate(0); }
@@ -110,15 +112,13 @@
     }
     @keyframes fadeInUp {
       from { opacity: 0; transform: translateY(20px); }
-      to   { opacity: 1; transform: translateY(0); }
+      to { opacity: 1; transform: translateY(0); }
     }
-
     .container h2 {
       margin-top: 0;
       text-align: center;
       margin-bottom: 10px;
     }
-
     .mini-container {
       margin: 15px auto;
       max-width: 500px;
@@ -136,10 +136,10 @@
       margin-bottom: 10px;
     }
 
-    /* ---------- BUTTONS ---------- */
+    /* ---------- BUTTONS (Neon Style!) ---------- */
     .button {
       display: inline-block;
-      background: linear-gradient(to bottom, #ff9900, #ff7700);
+      background: linear-gradient(45deg, #ff00ff, #00ffff);
       color: white;
       padding: 12px 25px;
       margin-top: 15px;
@@ -147,17 +147,18 @@
       border: none;
       border-radius: 50px;
       cursor: pointer;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+      box-shadow: 0 0 10px rgba(255, 0, 255, 0.8), 0 0 20px rgba(0, 255, 255, 0.8);
       transition: transform 0.2s, box-shadow 0.2s;
       text-decoration: none;
+      touch-action: manipulation;
     }
     .button:hover {
       transform: scale(1.1);
-      box-shadow: 0 6px 10px rgba(0, 0, 0, 0.5);
+      box-shadow: 0 0 15px rgba(255, 0, 255, 1), 0 0 30px rgba(0, 255, 255, 1);
     }
     #showFactBtn {
-      background: linear-gradient(to bottom, #ffee33, #ffcc00);
-      color: #333;
+      background: linear-gradient(45deg, #ff00ff, #00ffff);
+      color: #fff;
       font-size: 0.9em;
       margin-left: 10px;
     }
@@ -181,7 +182,7 @@
       transition: box-shadow 0.3s, transform 0.3s;
     }
     select:focus, input:focus, textarea:focus {
-      box-shadow: 0 0 8px #ffcc00;
+      box-shadow: 0 0 8px #39ff14;
       transform: scale(1.02);
     }
     .total-price {
@@ -202,7 +203,7 @@
       z-index: 5;
     }
     .footer a {
-      color: #ff9900;
+      color: #39ff14;
       text-decoration: none;
     }
     .footer a:hover {
@@ -213,22 +214,23 @@
     #bubbleOverlay {
       display: none;
       position: fixed;
-      top:0; left:0;
-      width:100%; height:100%;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
       background: rgba(0,0,0,0.5);
-      z-index:20000;
-      justify-content:center;
-      align-items:center;
+      z-index: 20000;
+      justify-content: center;
+      align-items: center;
       color: #fff;
-      text-align:center;
+      text-align: center;
     }
     #bubbleOverlay .content {
-      background: #ffcc00;
-      color:#333;
+      background: #222;
+      color: #39ff14;
       padding: 40px;
+      border: 3px solid #39ff14;
       border-radius: 60px;
       max-width: 500px;
-      box-shadow:0 4px 12px rgba(0,0,0,0.3);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
       position: relative;
       font-size: 1.2em;
       line-height: 1.5;
@@ -241,22 +243,23 @@
     #thankYouOverlay {
       display: none;
       position: fixed;
-      top:0; left:0;
-      width:100%; height:100%;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
       background: rgba(0,0,0,0.5);
-      z-index:10000;
-      justify-content:center;
-      align-items:center;
+      z-index: 10000;
+      justify-content: center;
+      align-items: center;
       color: #fff;
-      text-align:center;
+      text-align: center;
     }
     #thankYouOverlay .content {
-      background: #ffcc00;
-      color:#333;
+      background: #222;
+      color: #39ff14;
       padding: 40px;
+      border: 3px solid #39ff14;
       border-radius: 20px;
       max-width: 400px;
-      box-shadow:0 4px 12px rgba(0,0,0,0.3);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
       position: relative;
       display: flex;
       flex-direction: column;
@@ -265,7 +268,7 @@
     #thankYouOverlay h2 {
       margin: 0 0 20px;
       font-size: 2.2em;
-      color: green;
+      color: #39ff14;
     }
 
     /* ---------- BANANA FACT POPUP (Optional) ---------- */
@@ -288,7 +291,7 @@
     }
     @keyframes fadeInUp {
       from { opacity: 0; transform: translateY(20px); }
-      to   { opacity: 1; transform: translateY(0); }
+      to { opacity: 1; transform: translateY(0); }
     }
 
     /* ---------- ORDER LIST STYLES ---------- */
@@ -302,6 +305,40 @@
       margin: 5px 0;
       padding: 8px 12px;
       border-radius: 10px;
+    }
+
+    /* ---------- MOBILE OPTIMIZATIONS ---------- */
+    @media (max-width: 600px) {
+      .banana-icon {
+        width: 40px;
+        height: 40px;
+      }
+      h1 {
+        font-size: 2.5em;
+        margin: 10px auto;
+      }
+      .container, .mini-container {
+        max-width: 95%;
+        margin: 10px auto;
+        padding: 15px;
+      }
+      .button {
+        font-size: 1em;
+        padding: 10px 20px;
+      }
+      input, select, textarea {
+        padding: 10px;
+        font-size: 1em;
+      }
+      #bananaFactPopup {
+        right: 10px;
+        top: 10px;
+        max-width: 90%;
+      }
+      #bubbleOverlay .content,
+      #thankYouOverlay .content {
+        padding: 20px;
+      }
     }
   </style>
 </head>
@@ -447,12 +484,12 @@
     }
 
     /* ------- PRICE CALCULATION ------- */
-    const fruitSelect     = document.getElementById("fruitSelect");
-    const fruitQuantity   = document.getElementById("fruitQuantity");
-    const orderList       = document.getElementById("orderList");
-    const totalPriceEl    = document.getElementById("totalPrice");
-    const deliveryField   = document.getElementById("delivery");
-    const funnyNameField  = document.getElementById("funnyName");
+    const fruitSelect   = document.getElementById("fruitSelect");
+    const fruitQuantity = document.getElementById("fruitQuantity");
+    const orderList     = document.getElementById("orderList");
+    const totalPriceEl  = document.getElementById("totalPrice");
+    const deliveryField = document.getElementById("delivery");
+    const funnyNameField= document.getElementById("funnyName");
 
     deliveryField.addEventListener("change", function () {
       funnyNameField.style.display = (this.value === "Funny Name") ? "block" : "none";
@@ -501,7 +538,6 @@
     }
 
     /* ------- BANANA FACT POPUP ------- */
-    // Over 20 facts for extra fun :)
     const facts = [
       "Bananas are one of the most popular fruits in the world!",
       "Bananas are technically berries!",
