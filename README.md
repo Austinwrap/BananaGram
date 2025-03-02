@@ -391,7 +391,7 @@
 
   <!-- Banana Gram Form -->
   <div class="container">
-    <h2>Build Your Banana Bomb</h2>
+    <h2>Build Your BananaGram</h2>
     <form id="bananaForm">
       <label for="fruitSelect">Pick Your Weapon:</label>
       <select id="fruitSelect" name="fruitSelect" required>
